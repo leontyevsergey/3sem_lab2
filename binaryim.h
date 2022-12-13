@@ -50,6 +50,22 @@ binaryimage<T>::binaryimage(const size_t a_width, const size_t a_height) {
 	}
 }
 
+template <>
+binaryimage<char>::binaryimage(const size_t a_width, const size_t a_height) {
+	if (a_width == 0 || a_height == 0) {
+		throw std::out_of_range("The number of rows and columns should be >0");
+	}
+	width = a_width;
+	height = a_height;
+	image = new char* [width];
+	for (size_t i = 0; i < width; ++i) {
+		image[i] = new char[height];
+		for (size_t j = 0; j < height; ++j) {
+			image[i][j] = 48;
+		}
+	}
+}
+
 template <typename T>
 binaryimage<T>::binaryimage(const binaryimage& image_copy) {
 	width = image_copy.width;

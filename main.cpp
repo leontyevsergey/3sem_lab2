@@ -41,13 +41,13 @@ int main() {
 	bimage5(1, 1) = 'a';
 	cout << "bimage5:\n" << bimage5 << endl;
 
-	binaryimage<char> bimage6(3, 3);
-	bimage6(0, 0) = 'd';
-	bimage6(1, 1) = 'r';
-	cout << "bimage6:\n" << bimage6 << endl;
+	//binaryimage<char> bimage6(3, 3);
+	//bimage6(0, 0) = 'd';
+	//bimage6(1, 1) = 'r';
+	//cout << "bimage6:\n" << bimage6 << endl;
 
-	cout << bimage5 + bimage6 << endl;
-	cout << bimage5 * bimage6 << endl;
+	//cout << bimage5 + bimage6 << endl;
+	//cout << bimage5 * bimage6 << endl;
 
 	binaryimage<float> bimage7(3, 3);
 	bimage7(0, 0) = 7.1;
