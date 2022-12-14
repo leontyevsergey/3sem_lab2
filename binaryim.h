@@ -1,28 +1,27 @@
 #include<iostream>
-#include<cstdio>
-#include<stdexcept>
+
 using namespace std;
 
 template <typename T>
-class binaryimage {
+class Image {
 private:
 	T** image;
 	size_t width, height;
 public:
 	
-	binaryimage();
-	binaryimage(const size_t a_width, const size_t a_height);
-	binaryimage(const binaryimage& image_copy);
-	~binaryimage();
+	Image();
+	Image(const size_t a_width, const size_t a_height);
+	Image(const Image& image_copy);
+	~Image();
 	T operator()(const size_t a_width, const size_t a_height) const;
 	T& operator()(const size_t a_width, const size_t a_height);
-	binaryimage operator =(const binaryimage& a_image);
-	binaryimage operator *(const binaryimage& a_image) const;
-	binaryimage operator +(const binaryimage& a_image) const;
-	binaryimage operator *(const T a_b) const;
-	binaryimage operator +(const T a_b) const;
+	Image operator =(const Image& a_image);
+	Image operator *(const Image& a_image) const;
+	Image operator +(const Image& a_image) const;
+	Image operator *(const T a_b) const;
+	Image operator +(const T a_b) const;
 	//binaryimage operator !() const;
-	bool operator ==(const binaryimage& a_image) const;
+	bool operator ==(const Image& a_image) const;
 	double ratio() const;
 	//friend ostream& operator <<(std::ostream& os, const binaryimage& a_image);
 	size_t get_width() const;
@@ -32,10 +31,10 @@ public:
 
 
 template <typename T>
-binaryimage<T>::binaryimage() : image(nullptr), width(0), height(0) {}
+Image<T>::Image() : image(nullptr), width(0), height(0) {}
 
 template <typename T>
-binaryimage<T>::binaryimage(const size_t a_width, const size_t a_height) {
+Image<T>::Image(const size_t a_width, const size_t a_height) {
 	if (a_width == 0 || a_height == 0) {
 		throw std::out_of_range( "The number of rows and columns should be >0" );
 	}
@@ -45,13 +44,13 @@ binaryimage<T>::binaryimage(const size_t a_width, const size_t a_height) {
 	for (size_t i = 0; i < width; ++i) {
 		image[i] = new T[height];
 		for (size_t j = 0; j < height; ++j) {
-			image[i][j] = NULL;
+			image[i][j] = T();
 		}
 	}
 }
-
+/*
 template <>
-binaryimage<char>::binaryimage(const size_t a_width, const size_t a_height) {
+Image<char>::Image(const size_t a_width, const size_t a_height) {
 	if (a_width == 0 || a_height == 0) {
 		throw std::out_of_range("The number of rows and columns should be >0");
 	}
@@ -64,10 +63,10 @@ binaryimage<char>::binaryimage(const size_t a_width, const size_t a_height) {
 			image[i][j] = 48;
 		}
 	}
-}
+}*/
 
 template <typename T>
-binaryimage<T>::binaryimage(const binaryimage& image_copy) {
+Image<T>::Image(const Image& image_copy) {
 	width = image_copy.width;
 	height = image_copy.height;
 	image = new T * [width];
@@ -82,21 +81,21 @@ binaryimage<T>::binaryimage(const binaryimage& image_copy) {
 }
 
 template <typename T>
-T binaryimage<T>::operator()(const size_t a_width, const size_t a_height) const {
+T Image<T>::operator()(const size_t a_width, const size_t a_height) const {
 	if (a_width > width || a_height > height)
 		throw std::out_of_range( "Incorrect coordinates" );
 	return image[a_width][a_height];
 }
 
 template <typename T>
-T& binaryimage<T>::operator()(const size_t a_width, const size_t a_height) {
+T& Image<T>::operator()(const size_t a_width, const size_t a_height) {
 	if (a_width > width || a_height > height)
 		throw std::out_of_range( "Incorrect coordinates" );
 	return image[a_width][a_height];
 }
 
 template <typename T>
-binaryimage<T> binaryimage<T>::operator =(const binaryimage& a_image) {
+Image<T> Image<T>::operator =(const Image& a_image) {
 	width = a_image.width;
 	height = a_image.height;
 	if (width != a_image.width || height != a_image.height) {
@@ -121,7 +120,7 @@ binaryimage<T> binaryimage<T>::operator =(const binaryimage& a_image) {
 }
 
 template <typename T>
-binaryimage<T> binaryimage<T>::operator*(const binaryimage& a_image) const {
+Image<T> Image<T>::operator*(const Image& a_image) const {
 	size_t x_min = 0, y_min = 0, result_width, result_height;
 	if (width > a_image.width) {
 		result_width = width;
@@ -141,7 +140,7 @@ binaryimage<T> binaryimage<T>::operator*(const binaryimage& a_image) const {
 		result_height = a_image.height;
 		y_min = height;
 	}
-	binaryimage<T> result_image(result_width, result_height);
+	Image<T> result_image(result_width, result_height);
 	for (size_t i = 0; i < x_min; ++i) {
 		for (size_t j = 0; j < y_min; ++j) {
 			result_image.image[i][j] = image[i][j] * a_image.image[i][j];
@@ -164,8 +163,10 @@ binaryimage<T> binaryimage<T>::operator*(const binaryimage& a_image) const {
 	return result_image;
 }
 
+//void get_roi(const Image& a_image, size_t& x_min, size_t& y_min, size_t& result_width, size_t& result_height) {}
+
 template <typename T>
-binaryimage<T> binaryimage<T>::operator +(const binaryimage& a_image) const {
+Image<T> Image<T>::operator +(const Image& a_image) const {
 	size_t x_min = 0, y_min = 0, result_width, result_height;
 	if (width > a_image.width) {
 		result_width = width;
@@ -185,7 +186,7 @@ binaryimage<T> binaryimage<T>::operator +(const binaryimage& a_image) const {
 		result_height = a_image.height;
 		y_min = height;
 	}
-	binaryimage<T> result_image(result_width, result_height);
+	Image<T> result_image(result_width, result_height);
 	for (size_t i = 0; i < x_min; ++i) {
 		for (size_t j = 0; j < y_min; ++j) {
 			result_image.image[i][j] = image[i][j] + a_image.image[i][j];
@@ -209,9 +210,11 @@ binaryimage<T> binaryimage<T>::operator +(const binaryimage& a_image) const {
 	return result_image;
 }
 
+//void copy_outside_roi(...)
+
 template <typename T>
-binaryimage<T> binaryimage<T>::operator *(const T a_b) const {
-	binaryimage<T> result_image(width, height);
+Image<T> Image<T>::operator *(const T a_b) const {
+	Image<T> result_image(width, height);
 	for (size_t i = 0; i < width; ++i) {
 		for (size_t j = 0; j < height; ++j) {
 			result_image.image[i][j] = image[i][j] * a_b;
@@ -221,8 +224,8 @@ binaryimage<T> binaryimage<T>::operator *(const T a_b) const {
 }
 
 template <typename T>
-binaryimage<T> binaryimage<T>::operator +(const T a_b) const {
-	binaryimage<T> result_image(width, height);
+Image<T> Image<T>::operator +(const T a_b) const {
+	Image<T> result_image(width, height);
 	for (size_t i = 0; i < width; ++i) {
 		for (size_t j = 0; j < height; ++j) {
 			result_image.image[i][j] = image[i][j] + a_b;
@@ -246,7 +249,10 @@ binaryimage<T> binaryimage<T>::operator!() const {
 }*/
 
 template <typename T>
-bool binaryimage<T>::operator ==(const binaryimage& a_image) const {
+bool Image<T>::operator ==(const Image& a_image) const {
+	//if (width != a_image.width || height != a_image.height)
+	//	return false;
+
 	if (width == a_image.width && height == a_image.height) {
 		for (size_t i = 0; i < width; ++i) {
 			for (size_t j = 0; j < height; ++j) {
@@ -267,7 +273,7 @@ bool binaryimage<T>::operator ==(const binaryimage& a_image) const {
 }
 
 template <typename T>
-ostream& operator <<(ostream& os, const binaryimage<T>& a_image) {
+ostream& operator <<(ostream& os, const Image<T>& a_image) {
 	for (size_t i = 0; i < a_image.get_width(); ++i) {
 		for (size_t j = 0; j < a_image.get_height(); ++j) {
 			//if (a_image(i, j))
@@ -280,8 +286,22 @@ ostream& operator <<(ostream& os, const binaryimage<T>& a_image) {
 	return os;
 }
 
+template <>
+ostream& operator <<(ostream& os, const Image<char>& a_image) {
+	for (size_t i = 0; i < a_image.get_width(); ++i) {
+		for (size_t j = 0; j < a_image.get_height(); ++j) {
+			//if (a_image(i, j))
+			//	os << "\t" << a_image(i, j);
+			//else
+			os << "\t" << (int)a_image(i, j);
+		}
+		os << endl;
+	}
+	return os;
+}
+
 template <typename T>
-double binaryimage<T>::ratio() const {
+double Image<T>::ratio() const {
 	double temp = 0, d_width = width, d_height = height;
 	for (size_t i = 0; i < width; ++i) {
 		for (size_t j = 0; j < height; ++j) {
@@ -293,17 +313,17 @@ double binaryimage<T>::ratio() const {
 }
 
 template <typename T>
-size_t binaryimage<T>::get_width() const {
+size_t Image<T>::get_width() const {
 	return width;
 }
 
 template <typename T>
-size_t binaryimage<T>::get_height() const {
+size_t Image<T>::get_height() const {
 	return height;
 }
 
 template <typename T>
-binaryimage<T>::~binaryimage<T>() {
+Image<T>::~Image<T>() {
 	if (image) {
 		for (size_t i = 0; i < width; ++i) {
 			delete[] image[i];
